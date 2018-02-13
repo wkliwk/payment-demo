@@ -1,0 +1,62 @@
+<h1 class="display-4">Create Payment Order  </h1>
+<div class="card">
+  <div class="card-header">Make Payment Form</div>
+  <div class="card-body">
+      <form action="/api/orders/create" method="post">
+          <!-- ORDER -->
+          <div class="form-group">
+              <label for="name">Customer Name</label>
+              <input type="text" name="name" class="form-control">
+          </div>
+          <div class="form-group">
+              <label for="phone">Customer Phone Number</label>
+              <input type="text" name="phone" class="form-control">
+          </div>
+          <div class="form-group">
+              <label for="currency">Currency</label>
+              <input type="text" name="currency" class="form-control">
+          </div>
+          <!-- <div class="form-group">
+              <label for="currency">Currency</label>
+              <select class="form-control" id="currency">
+                  <option>HKD</option>
+                  <option>USD</option>
+                  <option>AUD</option>
+                  <option>EUR</option>
+                  <option>JPY</option>
+                  <option>CHN</option>
+              </select>
+          </div> -->
+          <div class="form-group">
+              <label for="price">Price</label>
+              <input type="number" name="price" class="form-control">
+          </div>
+          
+          <!-- PAYMENT -->
+          <div class="form-group">
+            <label for="holder">Credit card holder name</label>
+            <input type="text" name="holder" class="form-control">
+          </div>
+          <div class="form-group">
+              <label for="number">Credit card number</label>
+              <input type="text" name="number" class="form-control">
+          </div>
+          <div class="form-group">
+              <label for="expMonth">Credit card expiration month</label>
+              <input type="number" name="expMonth" class="form-control">
+          </div>
+          <div class="form-group">
+                <label for="expYear">Credit card expiration year</label>
+                <input type="number" name="expYear" class="form-control">
+            </div>
+          <div class="form-group">
+              <label for="ccv">Credit card CCV</label>
+              <input type="number" name="ccv" class="form-control">
+          </div>
+
+          <input type="submit" value="Submit" class="btn btn-primary">
+      </form>
+  </div>
+</div>
+
+
