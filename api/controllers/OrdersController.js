@@ -6,42 +6,32 @@
  */
 
 module.exports = {
+    createPayment: async (req, res) => {
+        console.log(req.allParams())
+        const { name, phone, currency, price, ...creditCard } = req.allParams()
 
-    createPayment: (req, res) => {
-        const { name, phone, currency:USD, price, ...creditCard } = req.allParams()
-
-        const orderId = OrdersService
+        const orderId = await OrdersService
             .saveOrder({ name, phone, currency, price })
             .then(order => { return order.id })
             .catch(err => res.serverError(err));
 
-        const paymentId = OrdersService
+        const paymentId = await PaymentService
             .makePayment({ currency, price, creditCard })
             .then(payment => { return payment.id })
             .catch(err => res.serverError(err));
 
-        OrdersService.updateOrderWithPaymentId({orderId, paymentId})
-            .then(result => { 
-                console.log(`result ${result}`)
-                return res.ok(result) 
-            })
+        const result = await OrdersService
+            .updateOrderWithPaymentId({ orderId, paymentId })
             .catch(err => { return res.serverError(err) });
 
-        // Promise
-        //     .all([orderId, paymentId])
-        //     .then(result => { return {orderId: results[0], paymentId: results[1]} })
-        //     .then(results => res.ok()) // todo array????
-        //     .catch(err => res.serverError(err));
+        return res.ok(result) 
     },
         
-    getOrder: (req, res) => {
-        // const { name, paymentId } = req.allParams()
+    getOrder: async(req, res) => {
         OrdersService
-            .getOrderByNameAndPaymentId(req.params)
-            .then(order => { return res.ok(result) })
+            .getOrderAndCached(req.allParams())
+            .then(order => { return res.json(order) })
             .catch(err => res.serverError(err));
-
-
     },
 };
 

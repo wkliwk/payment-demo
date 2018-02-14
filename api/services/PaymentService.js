@@ -3,10 +3,10 @@ const stripe = require("stripe")(
   );
   
 module.exports = {
-
+    
     makePayment: ({ currency, price, creditCard }) => {
         console.log(`makePayment creditCard: ${JSON.stringify(creditCard, null, 2)}`)
-
+       
         const paymentInfo = {
             currency,
             amount: price,
@@ -27,58 +27,5 @@ module.exports = {
             stripe.charges.create(paymentInfo, (err, result) => err ? reject(err) : resolve(result));
         });
     },
-
-    saveOrder: ({ name, phone, currency, price }) => {
-        return new Promise((resolve, reject) => {
-            try {
-                Orders
-                    .create({ name, phone, currency, price })
-                    .exec((err, result) => {
-                        if(err){
-                            return reject(err);
-                        }
-                        return resolve(result); // success
-                    });
-            } catch (err) {
-                reject(err);
-            }
-        })
-    },
-
-    updateOrderWithPaymentId: ({ orderId, paymentId }) => {
-        console.log(`updateOrderWithPaymentId ${orderId}, paymentId ${paymentId} `)
-        return new Promise((resolve, reject) => {
-            try {
-                Orders
-                    .update({ id: orderId }, { paymentId })
-                    .exec((err, result) => {
-                        if(err){
-                            return reject(err);
-                        }
-                        return resolve(result);
-                    });
-            } catch (err) {
-                reject(err);
-            }
-        })
-    },
-
-    getOrder: (name, paymentId) => {
-        return new Promise((resolve, reject) => {
-            try {
-                Orders
-                    .findOne({ name, paymentId })
-                    .exec((err, result) => {
-                        if(err){
-                            return reject(err);
-                        }
-                        return resolve(result);
-                    });
-            } catch (err) {
-                reject(err);
-            }
-        })
-
-    }
 
 }

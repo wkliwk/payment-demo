@@ -54,6 +54,5 @@ module.exports.connections = {
     port: 6379,
     host: 'localhost'
   }
-  
 
 };
