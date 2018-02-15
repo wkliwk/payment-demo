@@ -2,6 +2,24 @@ const stripe = require("stripe")(
     "sk_test_EkyTVa9qAXXAmTtjiU3H48SG"
   );
   
+function getOrderByNameAndPaymentId({ name, paymentId }) {
+    return new Promise((resolve, reject) => {
+        try {
+            Orders
+                .find({ "payment.id": paymentId })
+                .limit(1)
+                .exec((err, [result]) => {
+                    if(err){
+                        return reject(err);
+                    }
+                    return resolve(result);
+                });
+        } catch (err) {
+            reject(err);
+        }
+    })
+};
+
 module.exports = {
 
     saveOrder: async ({ name, phone, currency, price }) => {
@@ -10,12 +28,10 @@ module.exports = {
                 Orders
                     .create({ name, phone, currency, price })
                     .exec((err, result) => {
-                        return err ? reject(err) : resolve(result);
-                        
-                        // if(err){
-                        //     return reject(err);
-                        // }
-                        // return resolve(result); // success
+                        if(err){
+                            return reject(err);
+                        }
+                        return resolve(result); // success
                     });
             } catch (err) {
                 reject(err);
@@ -23,33 +39,12 @@ module.exports = {
         })
     },
 
-    updateOrderWithPaymentId: async ({ orderId, paymentId }) => {
-        console.log(`updateOrderWithPaymentId ${orderId}, paymentId ${paymentId} `)
+    updateOrderWithPayment: async ({ orderId, payment }) => {
         return new Promise((resolve, reject) => {
             try {
                 Orders
-                    .update({ id: orderId }, { paymentId })
-                    .exec((err, result) => {
-                        return err ? reject(err) : resolve(result);
-                        
-                        // if(err){
-                        //     return reject(err);
-                        // }
-                        // return resolve(result);
-                    });
-            } catch (err) {
-                reject(err);
-            }
-        })
-    },
-
-    getOrderByNameAndPaymentId: async ({ name, paymentId }) => {
-        return new Promise((resolve, reject) => {
-            try {
-                Orders
-                    .find({ paymentId: paymentId })
-                    .limit(1)
-                    .exec((err, result) => {
+                    .update({ id: orderId }, { payment })
+                    .exec((err, [result]) => {
                         if(err){
                             return reject(err);
                         }
@@ -74,12 +69,12 @@ module.exports = {
         // find orderBy paymentId and name in mongodb 
         console.log("find orderBy paymentId and name in mongodb")
         if(!cachedOrder) {
-            const order = await this.getOrderByNameAndPaymentId({ name, paymentId })
+            const order = await getOrderByNameAndPaymentId({ name, paymentId })
             // cache result to redis
             console.log("cache result to redis")
-            CacheService.set(key, ttl, JSON.stringify(order[0])) //TODO side effect 
-            console.log(`order 0 = ${JSON.stringify(order[0])}`)
-            return order[0]
+            CacheService.set(key, ttl, JSON.stringify(order)) //TODO side effect 
+            console.log(`order 0 = ${JSON.stringify(order)}`)
+            return order
         }
 
         console.log(`result = ${cachedOrder}`)

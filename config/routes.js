@@ -34,7 +34,6 @@ module.exports.routes = {
 
   'GET /': { view: 'homepage' },
 
-  // 'POST /api/orders/payments/create': { action: 'OrdersController.createPayment' }
   'POST /api/orders/create':  'OrdersController.createPayment',
   'GET  /api/orders':         'OrdersController.getOrder',
   /***************************************************************************

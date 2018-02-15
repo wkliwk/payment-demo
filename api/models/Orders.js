@@ -8,24 +8,23 @@
 module.exports = {
 
   attributes: {
-    paymentId: {
-      type: 'string'
+    payment: {
+      type: 'json'
     },
-    customerName: {
-      type: 'string'
-    },
-    customerPhoneNumber: {
+    name: {
       type: 'string',
-      numeric: true,
+    },
+    phone: {
+      type: 'string',
     },
     currency: {
       type: 'string',
-      enum: ['HKD', 'USD', 'AUD', 'EUR', 'JPY', 'CNY']
+      enum: ['HKD', 'USD', 'AUD', 'EUR', 'JPY', 'CNY'],
     },
     price: {
-      type: 'float' // bigDecimal
+      type: 'float',
     },
-  },
+  },  
   connection: 'mongodb'
 };
 
